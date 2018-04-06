@@ -157,6 +157,7 @@
 							<exclude>**/.classpath</exclude>
 							<exclude>**/*.log</exclude>
 							<exclude>**/*.js</exclude>
+							<exclude>**/*.css</exclude>
 						</excludes>
 						<useDefaultExcludes>true</useDefaultExcludes>
 						<strictCheck>true</strictCheck>
