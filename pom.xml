@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.smartrplace.drivers</groupId>
+	<artifactId>upnp-base</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>UPNP tools</name>
+	<description>UPNP server and client</description>
+	<packaging>pom</packaging>
+	<url>http://smartrplace.de</url>
+
+	<inceptionYear>2017</inceptionYear>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>manual</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git://github.com/smartrplace/upnp.git</connection>
+		<developerConnection>scm:git:git://github.com/smartrplace/upnp.git</developerConnection>
+		<url>https://github.com/smartrplace/upnp</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<osgi.version>5.0.0</osgi.version>
+		<slf4j.version>1.7.2</slf4j.version>
+		<maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+	</properties>
+
+	<modules>
+		<module>upnp-client</module>
+		<module>upnp-provider</module>
+		<module>upnp-provider-icon-smartrplace</module>
+		<module>upnp-tools</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!-- execution order: run scr before manifest and manifest before tests,
+					so that pax exam can use the manifest -->
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-scr-plugin</artifactId>
+					<version>1.24.0</version>
+					<configuration>
+						<outputDirectory>${project.build.outputDirectory}</outputDirectory>
+					</configuration>
+					<executions>
+						<execution>
+							<id>generate-scr-scrdescriptor</id>
+							<phase>process-classes</phase>
+							<goals>
+								<goal>scr</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<extensions>true</extensions>
+					<version>3.3.0</version>
+					<executions>
+						<execution>
+							<id>bundle-manifest</id>
+							<phase>generate-test-sources</phase>
+							<goals>
+								<goal>manifest</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+						<showDeprecation>true</showDeprecation>
+						<showWarnings>true</showWarnings>
+						<compilerArgs>
+							<arg>-Xlint</arg>
+						</compilerArgs>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+					<artifactId>maven-java-formatter-plugin</artifactId>
+					<version>0.4</version>
+					<configuration>
+						<configFile>${format.file}</configFile>
+						<encoding>UTF-8</encoding>
+						<lineEnding>LF</lineEnding>
+						<excludes>
+							<exclude>**/src/test/**</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>format</goal>
+							</goals>
+							<phase>validate</phase>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- Plugin for automatic addition of header to java, html, jsp, .. files. -->
+				<plugin>
+					<groupId>com.mycila</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>3.0</version>
+					<configuration>
+						<!-- see 'mvn com.mycila:license-maven-plugin:help -Ddetail=true' -->
+						<header>header.txt</header>
+						<keywords> <!-- existing license headers contain all of these keywords -->
+							<keyword>Smartrplace</keyword>
+							<keyword>Apache</keyword>
+							<keyword>License</keyword>
+						</keywords>
+						<properties>
+							<year>2018</year>
+							<email>info@smartrplace.de</email>
+						</properties>
+						<encoding>UTF-8</encoding>
+
+						<includes>
+							<include>src/**</include>
+							<include>web/**</include>
+						</includes>
+						<excludes>
+							<exclude>target/**</exclude>
+							<exclude>**/*.txt</exclude>
+							<exclude>**/data/**</exclude>
+							<exclude>**/MANIFEST.MF</exclude>
+							<exclude>**/.project</exclude>
+							<exclude>**/.settings</exclude>
+							<exclude>**/.classpath</exclude>
+							<exclude>**/*.log</exclude>
+							<exclude>**/*.js</exclude>
+						</excludes>
+						<useDefaultExcludes>true</useDefaultExcludes>
+						<strictCheck>true</strictCheck>
+						<failIfMissing>true</failIfMissing>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>format</goal>
+							</goals>
+							<!-- don't execute this plugin automatically -> need to be invoked
+								explicitly: mvn license:[goal] [goal] := check, format or remove -->
+							<phase>validate</phase>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- Source Plugin -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>${maven-source-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<!-- Javadoc Plugin -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven-javadoc-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.19.1</version>
+					<configuration>
+						<argLine>-ea</argLine>
+					</configuration>
+				</plugin>
+				<!-- Release Plugin -->
+				<!-- Usage: 1. mvn release:prepare -Prelease-prepare 2. mvn release:perform
+					-Dgoals'deploy -f src/pom.xml' NOTE: unfortunately the attribute pomFileName
+					is ignored in mvn 3.0.5 and/or release-plugin version 2.5.1 so using profile
+					-Prelease-perform isn't working yet ... alternatively (with dryRun): mvn
+					release:prepare -Prelease-prepare -DdryRun=true mvn release:clean -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5.3</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>org.osgi.core</artifactId>
+				<version>${osgi.version}</version>
+			</dependency>
+			<dependency>
+	            <groupId>org.osgi</groupId>
+	            <artifactId>org.osgi.compendium</artifactId>
+	            <version>${osgi.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.apache.felix</groupId>
+	            <artifactId>org.apache.felix.scr.annotations</artifactId>
+	            <version>1.9.12</version>
+       		</dependency>
+       		<dependency>
+	        	<groupId>javax.servlet</groupId>
+	        	<artifactId>javax.servlet-api</artifactId>
+	        	<version>3.0.1</version>
+	        </dependency>
+	        <dependency>
+	        	<groupId>org.slf4j</groupId>
+	        	<artifactId>slf4j-api</artifactId>
+	        	<version>${slf4j.version}</version>
+	        </dependency>
+		</dependencies>
+	</dependencyManagement>
+
+</project>

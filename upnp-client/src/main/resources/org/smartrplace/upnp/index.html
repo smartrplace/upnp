@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>UPNP Device overview</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="lib/jquery-1.11.1.min.js"></script>
+        <link href="lib/bootstrap.min.css" rel="stylesheet" type="text/css"/> 
+        <style>
+        th {
+			    background-color: #00ccff;
+			}
+        </style>
+    </head>
+    <body>
+    <div class="container-fluid">
+    	<h1 style="text-align:center;">UPNP devices overview</h1>
+    	<br>
+    	<button onclick="updateView();" class="btn">Update</button>
+    	<br>
+    	<table class="table">
+    		<tbody id="devices">
+    		<tr id="header" class="row">
+    			<th class="col">Device</th>
+    			<th class="col">Location</th>
+    			<th class="col">Server</th>
+    			<th class="col">Link</th>
+    			<th class="col">Valid (s)</th>
+    		</tr>
+    		</tbody>
+    	</table>
+   		<script>
+   			var running = false;
+   			function update() {
+   				if (running) 
+   					return;
+   				running = true;
+   				$.ajax({
+	   				type: "GET",
+		            url: "/org/smartrplace/drivers/upnp/overviewservlet",
+		            contentType: "application/json"
+   				}).done(function(response) {
+   					if (typeof response === "string") 
+   						response = JSON.parse(response);
+					var table = $(document.getElementById("devices"));
+					var rows = table.find(">tr");
+					for (var i=0;i<rows.length; i++) {
+						var r = rows.get(i);
+						if (r.id === "header")
+							continue;
+						if (!response.hasOwnProperty(r.id))
+							r.remove();
+					}
+					Object.keys(response).forEach(function(uuid) {
+						var row = table.find("#" + uuid);
+						var obj = response[uuid];
+						if (row.length === 0) {
+							var rowHtml = "<tr id=\"" + uuid + "\" class=\"row\"><td class=\"col\">"; 
+							if (obj.hasOwnProperty("icon")) {
+								rowHtml += "<img src=\"" + obj.icon + "\" height=\"32\" width=\"32\"></img>&nbsp;";							
+							}
+							rowHtml += obj.friendlyName + "</td><td class=\"col\">" + obj.location + "</td><td class=\"col\">" + obj.device + "</td>";
+							if (obj.hasOwnProperty("gatewayLink")) {
+								var link = obj.gatewayLink;
+								rowHtml += "<td class=\"col\"><button class=\"btn btn-primary\" onclick=\"window.open('" + link + "');\">Open Startpage</button></td>";
+							}
+							else {
+								rowHtml += "<td class=\"col\"></td>";
+							}
+							rowHtml += "<td class=\"col\" id=\"lifetime\">" + obj.lifetime + "</td></tr>";
+							table.append(rowHtml); // TODO check
+						} else {
+							row.find("#lifetime").html(obj.lifetime);
+						}
+										
+					});
+   				}).always(function() {
+					running = false;
+				});
+   			}
+   			var updateRunning = false;
+   			var counter = 0;
+   			function updateView(ignoreUpdateRunning) {
+   				if (!ignoreUpdateRunning && updateRunning)
+   					return;
+   				updateRunning = true;
+   				update();
+   				if (counter < 2) {
+	   				setTimeout(function() {
+	   					updateView(true);
+	   					counter = counter+1;
+	   				}, 3000);
+   				} else {
+   					counter = 0;
+   					updateRunning = false;
+   				}   			
+   			}
+   			updateView();
+   		</script>
+    </div>
+    </body>
+</html>
+</html>

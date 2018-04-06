@@ -1,0 +1,24 @@
+Upnp tools for OSGi
+Copyright 2018 Smartrplace UG
+
+// ------------------------------------------------------------------
+// Dependencies of this product
+// ------------------------------------------------------------------
+
+From: 'The OSGi alliance' (http://www.osgi.org)
+   - OSGi core API (https://mvnrepository.com/artifact/org.osgi/org.osgi.core/5.0.0) org.osgi:org.osgi.core:jar:5.0.0
+     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+   - OSGi Compendium (https://mvnrepository.com/artifact/org.osgi/org.osgi.compendium/5.0.0) org.osgi:org.osgi.compendium:jar:5.0.0
+     License: The Apache Software License, Version 2.0  (http://www.apache.org/licenses/LICENSE-2.0.txt)
+
+From: 'QOS.ch' (http://www.qos.ch)
+  - SLF4J API Module (http://www.slf4j.org) org.slf4j:slf4j-api:jar:1.7.2
+    License: MIT License  (http://www.opensource.org/licenses/mit-license.php)
+
+From 'json.org' (http://json.org)
+  - org.json (http://json.org) org.json:json:jar:20180130
+  	License: see http://json.org/license.html
+
+From 'Oracle' (https://www.oracle.com)
+  - Servlet API (https://javaee.github.io/servlet-spec/) javax.servlet:javax.servlet-api:jar:3.0.1
+    License: either CDDL (https://oss.oracle.com/licenses/CDDL) or GPL v2.0 (https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
