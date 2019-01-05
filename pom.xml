@@ -29,7 +29,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<osgi.version>5.0.0</osgi.version>
+		<osgi.version>6.0.0</osgi.version>
 		<slf4j.version>1.7.2</slf4j.version>
 		<maven-source-plugin.version>3.0.1</maven-source-plugin.version>
 	</properties>
@@ -42,43 +42,13 @@
 	</modules>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>versions-maven-plugin</artifactId>
-				<version>2.4</version>
-			</plugin>
-		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!-- execution order: run scr before manifest and manifest before tests,
-					so that pax exam can use the manifest -->
-				<plugin>
-					<groupId>org.apache.felix</groupId>
-					<artifactId>maven-scr-plugin</artifactId>
-					<version>1.24.0</version>
-					<configuration>
-						<outputDirectory>${project.build.outputDirectory}</outputDirectory>
-					</configuration>
-					<executions>
-						<execution>
-							<id>generate-scr-scrdescriptor</id>
-							<phase>process-classes</phase>
-							<goals>
-								<goal>scr</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
 				<plugin>
 					<groupId>org.apache.felix</groupId>
 					<artifactId>maven-bundle-plugin</artifactId>
 					<extensions>true</extensions>
-					<version>3.3.0</version>
+					<version>4.0.0</version>
 					<executions>
 						<execution>
 							<id>bundle-manifest</id>
@@ -101,27 +71,6 @@
 							<arg>-Xlint</arg>
 						</compilerArgs>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
-					<artifactId>maven-java-formatter-plugin</artifactId>
-					<version>0.4</version>
-					<configuration>
-						<configFile>${format.file}</configFile>
-						<encoding>UTF-8</encoding>
-						<lineEnding>LF</lineEnding>
-						<excludes>
-							<exclude>**/src/test/**</exclude>
-						</excludes>
-					</configuration>
-					<executions>
-						<execution>
-							<goals>
-								<goal>format</goal>
-							</goals>
-							<phase>validate</phase>
-						</execution>
-					</executions>
 				</plugin>
 
 				<!-- Plugin for automatic addition of header to java, html, jsp, .. files. -->
@@ -204,7 +153,20 @@
 						</execution>
 					</executions>
 				</plugin>
-
+				  <plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.6</version>
+					<executions>
+						<execution>
+							<id>sign-artifacts</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>sign</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -232,19 +194,14 @@
 		<dependencies>
 			<dependency>
 				<groupId>org.osgi</groupId>
-				<artifactId>org.osgi.core</artifactId>
+				<artifactId>osgi.core</artifactId>
 				<version>${osgi.version}</version>
 			</dependency>
 			<dependency>
 	            <groupId>org.osgi</groupId>
-	            <artifactId>org.osgi.compendium</artifactId>
+	            <artifactId>osgi.cmpn</artifactId>
 	            <version>${osgi.version}</version>
 	        </dependency>
-	        <dependency>
-	            <groupId>org.apache.felix</groupId>
-	            <artifactId>org.apache.felix.scr.annotations</artifactId>
-	            <version>1.9.12</version>
-       		</dependency>
        		<dependency>
 	        	<groupId>javax.servlet</groupId>
 	        	<artifactId>javax.servlet-api</artifactId>
@@ -258,4 +215,40 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<profiles>
+	<!-- Sign and deploy locally, for testing. Usage: mvn -Psign install -DskipTests 
+			-o -->
+		<profile>
+			<id>sign</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!-- Generate source, javadoc, sign and deploy. Usage: 
+				mvn -Psign-and-deploy deploy -DskipTests -Dadditionalparam=-Xdoclint:none -->
+			<id>sign-and-deploy</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

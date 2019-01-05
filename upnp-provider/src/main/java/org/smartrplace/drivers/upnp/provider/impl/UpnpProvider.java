@@ -39,14 +39,15 @@ import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 
-import org.apache.felix.scr.annotations.Activate;
-import org.apache.felix.scr.annotations.Component;
-import org.apache.felix.scr.annotations.Deactivate;
-import org.apache.felix.scr.annotations.Reference;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.slf4j.Logger;
@@ -137,7 +138,7 @@ public class UpnpProvider {
 			}
 		});
 		try {
-			// TODO use whiteboard service instead?
+			// TODO use whiteboard service instead
 			httpService.registerServlet(XML_DESCRIPTION_ADDRESS, new XmlDescriptorServlet(this), null, null);
 			// use fragment bundles for configuration
 			final Enumeration<URL> urls = ctx.getBundle().findEntries("/", "upnp.*", false);
@@ -183,7 +184,7 @@ public class UpnpProvider {
 
 	}
 
-	@org.apache.felix.scr.annotations.Modified
+	@Modified
 	protected void modified(BundleContext ctx, Map<String,?> config) {
 		// only here to avoid component restart when we update the configuration property
 	}
