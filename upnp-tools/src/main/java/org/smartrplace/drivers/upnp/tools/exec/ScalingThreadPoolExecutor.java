@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * A {@link ThreadPoolExecutor} that actively increases the number of threads when new tasks come in,
  * instead of waiting for the task queue to fill up. 
  * 
- * @see https://github.com/kimchy/kimchy.github.com/blob/master/_posts/2008-11-23-juc-executorservice-gotcha.textile
+ * see https://github.com/kimchy/kimchy.github.com/blob/master/_posts/2008-11-23-juc-executorservice-gotcha.textile
  */
 public class ScalingThreadPoolExecutor extends ThreadPoolExecutor {
 

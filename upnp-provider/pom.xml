@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.smartrplace.drivers</groupId>
 		<artifactId>upnp-base</artifactId>
-        <version>0.0.2</version>
+        <version>0.0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>upnp-provider</artifactId>

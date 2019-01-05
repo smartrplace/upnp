@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.smartrplace.drivers</groupId>
 	<artifactId>upnp-base</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>UPNP tools</name>
 	<description>UPNP server and client</description>
 	<packaging>pom</packaging>
@@ -16,7 +17,7 @@
 		<license>
 			<name>Apache License, Version 2.0</name>
 			<url>https://www.apache.org/licenses/LICENSE-2.0</url>
-			<distribution>manual</distribution>
+			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
@@ -117,7 +118,7 @@
 							<goals>
 								<goal>format</goal>
 							</goals>
-							<!-- don't execute this plugin automatically -> need to be invoked
+							<!-- don't execute this plugin automatically -> need to be invoked 
 								explicitly: mvn license:[goal] [goal] := check, format or remove -->
 							<phase>validate</phase>
 						</execution>
@@ -153,7 +154,7 @@
 						</execution>
 					</executions>
 				</plugin>
-				  <plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-gpg-plugin</artifactId>
 					<version>1.6</version>
@@ -176,10 +177,10 @@
 					</configuration>
 				</plugin>
 				<!-- Release Plugin -->
-				<!-- Usage: 1. mvn release:prepare -Prelease-prepare 2. mvn release:perform
-					-Dgoals'deploy -f src/pom.xml' NOTE: unfortunately the attribute pomFileName
-					is ignored in mvn 3.0.5 and/or release-plugin version 2.5.1 so using profile
-					-Prelease-perform isn't working yet ... alternatively (with dryRun): mvn
+				<!-- Usage: 1. mvn release:prepare -Prelease-prepare 2. mvn release:perform 
+					-Dgoals'deploy -f src/pom.xml' NOTE: unfortunately the attribute pomFileName 
+					is ignored in mvn 3.0.5 and/or release-plugin version 2.5.1 so using profile 
+					-Prelease-perform isn't working yet ... alternatively (with dryRun): mvn 
 					release:prepare -Prelease-prepare -DdryRun=true mvn release:clean -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -198,25 +199,25 @@
 				<version>${osgi.version}</version>
 			</dependency>
 			<dependency>
-	            <groupId>org.osgi</groupId>
-	            <artifactId>osgi.cmpn</artifactId>
-	            <version>${osgi.version}</version>
-	        </dependency>
-       		<dependency>
-	        	<groupId>javax.servlet</groupId>
-	        	<artifactId>javax.servlet-api</artifactId>
-	        	<version>3.0.1</version>
-	        </dependency>
-	        <dependency>
-	        	<groupId>org.slf4j</groupId>
-	        	<artifactId>slf4j-api</artifactId>
-	        	<version>${slf4j.version}</version>
-	        </dependency>
+				<groupId>org.osgi</groupId>
+				<artifactId>osgi.cmpn</artifactId>
+				<version>${osgi.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.0.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 	<profiles>
-	<!-- Sign and deploy locally, for testing. Usage: mvn -Psign install -DskipTests 
+		<!-- Sign and deploy locally, for testing. Usage: mvn -Psign install -DskipTests 
 			-o -->
 		<profile>
 			<id>sign</id>
@@ -231,7 +232,7 @@
 		</profile>
 		<profile>
 			<!-- Generate source, javadoc, sign and deploy. Usage: 
-				mvn -Psign-and-deploy deploy -DskipTests -Dadditionalparam=-Xdoclint:none -->
+				mvn -Psign-and-deploy deploy -DskipTests -Dadditionalparam=-Xdoclint:none -Dgpg.keyname=smartrplace -->
 			<id>sign-and-deploy</id>
 			<build>
 				<plugins>
